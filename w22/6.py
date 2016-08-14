@@ -1,32 +1,36 @@
 n = int(raw_input())
 
-memo = {'': -1}
+memo = dict({'':   []})
 
 
-def hashable(state):
-    return ''.join(map(str, state))
+def update(state, headers):
+    new_number = state[-1]
+    if new_number == state[0] and len(state) > 1:
+        headers.append(len(state) - 1)
+    kill_list = []
+    for index in headers:
+        if new_number != state[len(state) - index - 1]:
+            kill_list.append(index)
+    for kill in kill_list:
+        headers.remove(kill)
+    # finally, update our table with a copy
+    memo[''.join(map(str, state))] = list(headers)
 
+
+def lookup(state):
+    return list(memo[''.join(map(str, state))])
 
 state = []
-header = -1
+headers = []
 for i in xrange(n):
     diff = raw_input().split()
     if diff[0] == '-':
         state.pop()
-        header = memo[hashable(state)]
+        headers = lookup(state)
     else:
-        new_number = int(diff[1])
-        state.append(new_number)
-        if header > -1 and new_number != state[len(state) - header - 1]:
-            header = -1
-
-        if header == -1:
-            if len(state) > 1 and new_number == state[0]:
-                header = len(state) - 1
-
-        memo[hashable(state)] = header
-
-    if header == -1:
+        state.append(int(diff[1]))
+        update(state, headers)
+    if len(headers) == 0:
         print 0
     else:
-        print len(state) - header
+        print len(state) - min(headers)

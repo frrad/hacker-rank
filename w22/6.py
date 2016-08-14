@@ -1,6 +1,5 @@
 n = int(raw_input())
-
-memo = dict({'':   []})
+memo = [[]]
 
 
 def update(state, headers):
@@ -14,7 +13,7 @@ def update(state, headers):
     for kill in kill_list:
         headers.remove(kill)
     # finally, update our table with a copy
-    memo[''.join(map(str, state))] = list(headers)
+    memo.append(list(headers))
 
 
 def lookup(state):
@@ -26,7 +25,8 @@ for i in xrange(n):
     diff = raw_input().split()
     if diff[0] == '-':
         state.pop()
-        headers = lookup(state)
+        memo.pop()
+        headers = list(memo[-1])
     else:
         state.append(int(diff[1]))
         update(state, headers)

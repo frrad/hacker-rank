@@ -1,5 +1,4 @@
 n = int(raw_input())
-memo = [[]]
 
 
 def update(state, headers):
@@ -16,9 +15,7 @@ def update(state, headers):
     memo.append(list(headers))
 
 
-def lookup(state):
-    return list(memo[''.join(map(str, state))])
-
+memo = [[]]
 state = []
 headers = []
 for i in xrange(n):
@@ -30,6 +27,7 @@ for i in xrange(n):
     else:
         state.append(int(diff[1]))
         update(state, headers)
+    # print state, headers, len(memo)
     if len(headers) == 0:
         print 0
     else:
